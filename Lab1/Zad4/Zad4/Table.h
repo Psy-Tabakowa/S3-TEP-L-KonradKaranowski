@@ -8,7 +8,7 @@ private:
 	int const DEFAULT_LENGTH = 5;
 	string name;
 	int size;
-	int* array = nullptr;
+	int* array;
 public:
 	// constructors
 	Table(string name, int array_size);

@@ -9,17 +9,27 @@ Table::Table(string name, int array_size)
 	this->name = name;
 	this->size = array_size;
 	this->array = new int[this->size];
-	cout << "Created object with name: " << this->name << endl;
+	cout << "Created with specified parameters: " << this->name << endl;
 }
 
-Table::Table() : Table(DEFAULT_NAME, DEFAULT_LENGTH)
+Table::Table()
 {
-
+	this->name = DEFAULT_NAME;
+	this->size = DEFAULT_LENGTH;
+	this->array = new int[this->size];
+	cout << "Created with default parameters: " << this->name << endl;
 }
 
-Table::Table(const Table& other) : Table(other.name + "_copy", other.size)
+Table::Table(const Table& other)
 {
-
+	this->name = other.name + "_copy";
+	this->size = other.size;
+	this->array = new int[this->size];
+	for (int i = 0; i < this->size; i++)
+	{
+		array[i] = other.array[i];
+	}
+	cout << "Created copy: " << this->name << endl;
 }
 
 Table::~Table()
