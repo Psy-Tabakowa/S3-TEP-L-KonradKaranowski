@@ -1,49 +1,59 @@
-#include "Table.h"
 #include <iostream>
-using std::cout;
-using std::endl;
+#include "Table.h"
 
 
-Table::Table(string name, int array_size)
+Table::Table(std::string& name, int array_size) : name(name), size(array_size)
 {
-	this->name = name;
-	this->size = array_size;
-	this->array = new int[this->size];
-	cout << "Created with specified parameters: " << this->name << endl;
-}
-
-Table::Table()
-{
-	this->name = DEFAULT_NAME;
-	this->size = DEFAULT_LENGTH;
-	this->array = new int[this->size];
-	cout << "Created with default parameters: " << this->name << endl;
-}
-
-Table::Table(const Table& other)
-{
-	this->name = other.name + "_copy";
-	this->size = other.size;
-	this->array = new int[this->size];
-	for (int i = 0; i < this->size; i++)
+	if (this->size < 0)
 	{
-		array[i] = other.array[i];
+		this->array = NULL;
 	}
-	cout << "Created copy: " << this->name << endl;
+	else
+	{
+		this->array = new int[this->size];
+	}
+	std::cout << "Created with specified parameters: " << this->name << std::endl;
+}
+
+Table::Table() : name(DEFAULT_NAME), size(DEFAULT_LENGTH)
+{
+	if (this->size < 0) this->array = NULL;
+	else  this->array = new int[this->size];
+	std::cout << "Created with default parameters: " << this->name << std::endl;
+}
+
+Table::Table(const Table& other) : name(other.name + "_copy"), size(other.size)
+{
+	if (this->size < 0)
+	{
+		this->array = NULL;
+	}
+	else
+	{
+		this->array = new int[this->size];
+		for (int i = 0; i < this->size; i++)
+		{
+			array[i] = other.array[i];
+		}
+	}
+	std::cout << "Created copy: " << this->name << std::endl;
 }
 
 Table::~Table()
 {
-	delete[] this->array;
-	cout << "Deleted object with name: " << this->name << endl;
+	if (this->array != NULL)
+	{
+		delete[] this->array;
+	}
+	std::cout << "Deleted object with name: " << this->name << std::endl;
 }
 
 void Table::print_info()
 {
-	cout << this->name << " " << this->size << " " << this << endl;
+	std::cout << this->name << " " << this->size << " " << this << std::endl;
 }
 
-void Table::set_name(string new_name)
+void Table::set_name(std::string& new_name)
 {
 	this->name = new_name;
 }
@@ -52,7 +62,7 @@ bool Table::set_size(int new_size)
 {
 	if (new_size < 0)
 	{
-		cout << "Array size cannot be less than 0." << endl;
+		std::cout << "Array size cannot be less than 0." << std::endl;
 		return false;
 	}
 	this->size = new_size;

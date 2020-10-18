@@ -141,8 +141,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="test_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constants.h" />
+    <ClInclude Include="main_constants.h" />
+    <ClInclude Include="prototypes.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
