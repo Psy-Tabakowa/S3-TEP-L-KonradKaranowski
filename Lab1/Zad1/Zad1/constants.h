@@ -1,5 +1,5 @@
-#include <string>
 #pragma once
+#include <string>
 
 
 const int VALUE_TO_ADD = 5;

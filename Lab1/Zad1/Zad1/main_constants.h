@@ -3,4 +3,4 @@
 
 const int FIVE = 5;
 const int MINUS_FIVE = -5;
-const int ZIOBRO = 0;
+const int ZERO = 0;

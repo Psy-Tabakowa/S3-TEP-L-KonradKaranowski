@@ -2,7 +2,7 @@
 #include "Table.h"
 
 
-Table::Table(std::string& name, int array_size) : name(name), size(array_size)
+Table::Table(const std::string& name, int array_size) : name(name), size(array_size)
 {
 	if (this->size < 0)
 	{
@@ -17,8 +17,14 @@ Table::Table(std::string& name, int array_size) : name(name), size(array_size)
 
 Table::Table() : name(DEFAULT_NAME), size(DEFAULT_LENGTH)
 {
-	if (this->size < 0) this->array = NULL;
-	else  this->array = new int[this->size];
+	if (this->size < 0)
+	{
+		this->array = NULL;
+	}
+	else
+	{
+		this->array = new int[this->size];
+	}
 	std::cout << "Created with default parameters: " << this->name << std::endl;
 }
 
@@ -53,24 +59,30 @@ void Table::print_info()
 	std::cout << this->name << " " << this->size << " " << this << std::endl;
 }
 
-void Table::set_name(std::string& new_name)
+void Table::set_name(const std::string& new_name)
 {
 	this->name = new_name;
 }
 
 bool Table::set_size(int new_size)
 {
-	if (new_size < 0)
+	if (new_size <= 0)
 	{
-		std::cout << "Array size cannot be less than 0." << std::endl;
+		std::cout << "Array size has to be positive." << std::endl;
 		return false;
 	}
-	this->size = new_size;
-	delete[] this->array;
-	this->array = new int[this->size];
+	int* new_array = new int[new_size];
+	if (array != NULL)
+	{
+		for (int i = 0; i < std::min(size, new_size); i++)
+		{
+			new_array[i] = array[i];
+		}
+		delete[] array;
+	}
+	array = new_array;
 	return true;
 }
-
 
 Table* Table::clone()
 {
