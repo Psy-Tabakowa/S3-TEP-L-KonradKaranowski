@@ -18,7 +18,10 @@ Table::Table(std::string& name, int array_size) : name(name), size(array_size)
 
 Table::Table() : name(DEFAULT_NAME), size(DEFAULT_LENGTH)
 {
-	if (size < 0) array = NULL;
+	if (size < 0)
+	{
+		array = NULL;
+	}
 	else  array = new int[size];
 	std::cout << "Created with default parameters: " << name << std::endl;
 }

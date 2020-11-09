@@ -5,9 +5,9 @@
 
 Table::Table(std::string& name, int array_size) :
 	name(name),
-	size(array_size)
+	size(array_size <= 0 ? 0 : array_size)
 {
-	if (size <= 0)
+	if (size == 0)
 	{
 		array = NULL;
 	}
@@ -22,7 +22,7 @@ Table::Table() :
 	name(DEFAULT_NAME),
 	size(DEFAULT_LENGTH)
 {
-	if (size <= 0)
+	if (size == 0)
 	{
 		array = NULL;
 	}
@@ -37,7 +37,7 @@ Table::Table(const Table& other) :
 	name(other.name + "_copy"),
 	size(other.size)
 {
-	if (size <= 0)
+	if (size == 0)
 	{
 		array = NULL;
 	}
@@ -81,7 +81,7 @@ void Table::set_name(std::string& new_name)
 
 bool Table::set_size(int new_size)
 {
-	if (new_size <= 0)
+	if (new_size < 0)
 	{
 		std::cout << "Array size has to be positive." << std::endl;
 		return false;
@@ -112,15 +112,18 @@ void Table::set_value_at(int offset, int new_value)
 
 void Table::print()
 {
-	std::cout << "Array with pointer: " << array << std::endl;
+	std::cout << "Array with pointer: " << array << " and size: " << size << std::endl;
+	std::cout << '[';
 	if (array == NULL)
 	{
-		return;
+		std::cout << "NULL";
 	}
-	std::cout << '[';
-	for (int i = 0; i < size; i++)
+	else
 	{
-		std::cout << array[i] << ' ';
+		for (int i = 0; i < size; i++)
+		{
+			std::cout << array[i] << ' ';
+		}
 	}
 	std::cout << ']' << std::endl;
 }
@@ -134,22 +137,15 @@ Table* Table::clone()
 
 Table Table::operator+(const Table& other)
 {
-	if ((size <= 0) && (other.size <=0))
+	int new_size = size + other.size;
+	int* new_array;
+	if (new_size == 0)
 	{
-		return Table(name, size + other.size, NULL);
-	}
-	else if (size <= 0)
-	{
-		return Table(other);
-	}
-	else if (other.size <= 0)
-	{
-		return *this->clone();
+		new_array = NULL;
 	}
 	else
 	{
-		int new_size = size + other.size;
-		int* new_array = new int[new_size];
+		new_array = new int[new_size];
 		for (int i = 0; i < size; i++)
 		{
 			new_array[i] = array[i];
@@ -158,6 +154,6 @@ Table Table::operator+(const Table& other)
 		{
 			new_array[i + size] = other.array[i];
 		}
-		return Table(name, new_size, new_array);
 	}
+	return Table(name, new_size, new_array);
 }

@@ -46,3 +46,20 @@ void test_concatenation()
 	std::cout << "Array after concatenation: " << std::endl;
 	tab_2.print();
 }
+
+
+void test_concatenation_with_zeros()
+{
+	std::string str = "Name1";;
+	Table tab1 = Table(str, 2);;
+	Table tab2 = Table();;
+	for (int i = 0; i < 8; i++)
+	{
+		tab2.set_value_at(i, i);
+	}
+	tab1.print();
+	tab2.print();
+	Table tab3 = tab1 + tab2;;
+	std::cout << "Array after concatenation: " << std::endl;
+	tab3.print();
+}
