@@ -147,6 +147,9 @@
     <ClInclude Include="tests.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="matbad.txt" />
+    <Text Include="matdob.txt" />
+    <Text Include="matflo.txt" />
     <Text Include="matint.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

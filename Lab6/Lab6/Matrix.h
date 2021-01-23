@@ -59,6 +59,7 @@ namespace MyAlgebra
 		Matrix rowVector(int idx);
 		Matrix colVector(int idx);
 
+		// print matrix
 		void display();
 
 		// read from file
@@ -104,9 +105,9 @@ template<typename T>
 MyAlgebra::Matrix<T>::Matrix(Matrix&& other) :
 	rows(other.rows),
 	cols(other.cols),
-	elements(other.elements)
+	elements(other.elements),
+	matrix(other.matrix)
 {
-	matrix = other.matrix;
 	other.rows = 0;
 	other.cols = 0;
 	other.elements = 0;
@@ -116,6 +117,7 @@ MyAlgebra::Matrix<T>::Matrix(Matrix&& other) :
 template<typename T>
 MyAlgebra::Matrix<T>::~Matrix()
 {
+	std::cout << "delete this" << std::endl;
 	delete[] matrix;
 }
 
@@ -185,7 +187,7 @@ T* MyAlgebra::Matrix<T>::operator[](int idx)
 	{
 		throw std::exception("Invalid index");
 	}
-	return &matrix[idx];
+	return &matrix[idx * cols];
 }
 
 template<typename T>
@@ -240,7 +242,11 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator*(const Matrix& other)
 		throw std::exception("Invalid dimensions");
 	}
 	T* new_matrix = new T[rows * other.cols];
-	std::fill_n(new_matrix, T(), rows * other.cols);
+	// nie dzia³a³o mi fill_n -.-
+	for (int i = 0; i < rows * other.cols; i++)
+	{
+		new_matrix[i] = T{};
+	}
 	for (int i = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
@@ -352,7 +358,7 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path)
 		}
 		if (vector.size() != cols)
 		{
-			throw std::exception("This file is incorrect. Kill yourself.");
+			throw std::exception("This is not correct matrix in txt format.");
 		}
 		for (int j = 0; j < cols; j++)
 		{
@@ -370,19 +376,19 @@ T MyAlgebra::Matrix<T>::convert(const std::string& string)
 }
 
 template <>
-int MyAlgebra::Matrix<int>::convert(const std::string& string)
+inline int MyAlgebra::Matrix<int>::convert(const std::string& string)
 {
 	return std::stoi(string);
 }
 
 template <>
-double MyAlgebra::Matrix<double>::convert(const std::string& string)
+inline double MyAlgebra::Matrix<double>::convert(const std::string& string)
 {
 	return std::stod(string);
 }
 
 template <>
-float MyAlgebra::Matrix<float>::convert(const std::string& string)
+inline float MyAlgebra::Matrix<float>::convert(const std::string& string)
 {
 	return std::stof(string);
 }

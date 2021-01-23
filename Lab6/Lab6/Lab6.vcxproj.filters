@@ -34,5 +34,14 @@
     <Text Include="matint.txt">
       <Filter>Pliki zasobów</Filter>
     </Text>
+    <Text Include="matdob.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="matflo.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="matbad.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
   </ItemGroup>
 </Project>
