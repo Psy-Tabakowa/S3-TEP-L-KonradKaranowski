@@ -40,6 +40,7 @@ namespace MyAlgebra
 		// diagonal matrix
 		Matrix& operator=(T* diagonal);
 
+		// coœ tam coœ tam
 		T* operator[](int idx);
 
 		// transposition
@@ -59,15 +60,13 @@ namespace MyAlgebra
 		Matrix colVector(int idx);
 
 		void display();
+
+		// read from file
+		static Matrix<T> read_txt(const std::string& path);
+
+		// conversions
+		static T convert(const std::string& string);
 	};
-
-	// read matrix from file
-	template <typename T>
-	Matrix<T> read_txt(const std::string& path);
-
-	// convert
-	template <typename T>
-	T convert(const std::string& string);
 }
 
 template<typename T>
@@ -317,7 +316,7 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::colVector(int idx)
 }
 
 template<typename T>
-MyAlgebra::Matrix<T> MyAlgebra::read_txt<T>(const std::string& path)
+MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path)
 {	
 	std::ifstream file;
 	file.open(path);
@@ -349,7 +348,7 @@ MyAlgebra::Matrix<T> MyAlgebra::read_txt<T>(const std::string& path)
 		std::stringstream stream = std::stringstream(matrix[i]);
 		while (getline(stream, temp, SEP))
 		{
-			vector.push_back(convert<T>(temp));
+			vector.push_back(convert(temp));
 		}
 		if (vector.size() != cols)
 		{
@@ -365,25 +364,25 @@ MyAlgebra::Matrix<T> MyAlgebra::read_txt<T>(const std::string& path)
 
 // conversions
 template <typename T>
-T MyAlgebra::convert(const std::string& string)
+T MyAlgebra::Matrix<T>::convert(const std::string& string)
 {
 	throw std::exception("This type is not supported.");
 }
 
 template <>
-int MyAlgebra::convert(const std::string& string)
+int MyAlgebra::Matrix<int>::convert(const std::string& string)
 {
 	return std::stoi(string);
 }
 
 template <>
-double MyAlgebra::convert(const std::string& string)
+double MyAlgebra::Matrix<double>::convert(const std::string& string)
 {
 	return std::stod(string);
 }
 
 template <>
-float MyAlgebra::convert(const std::string& string)
+float MyAlgebra::Matrix<float>::convert(const std::string& string)
 {
 	return std::stof(string);
 }
