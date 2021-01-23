@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Table.h"
-#include "constans.h"
 
 
 Table::Table(std::string& name, int array_size) :
@@ -9,28 +8,42 @@ Table::Table(std::string& name, int array_size) :
 {
 	if (size == 0)
 	{
-		array = NULL;
+		array = nullptr;
 	}
 	else
 	{
 		array = new int[size];
 	}
-	std::cout << "Created with specified parameters: " << name << std::endl;
+	std::cout << "Created with specified parameters: " << array << std::endl;
+}
+
+Table::Table(Table&& other) :
+	name(other.name),
+	array(other.array),
+	size(other.size)
+{
+	other.array = nullptr;
+	other.size = 0;
+	std::cout << "Moved object with array: " << array << std::endl;
 }
 
 Table::Table() :
-	name(DEFAULT_NAME),
-	size(DEFAULT_LENGTH)
+	name("The Table of Destiny"),
+	size(4)
 {
 	if (size == 0)
 	{
-		array = NULL;
+		array = nullptr;
 	}
 	else
 	{
 		array = new int[size];
+		for (int i = 0; i < size; i++)
+		{
+			array[i] = 0;
+		}
 	}
-	std::cout << "Created with default parameters: " << name << std::endl;
+	std::cout << "Created with default parameters: " << array << std::endl;
 }
 
 Table::Table(const Table& other) :
@@ -39,7 +52,7 @@ Table::Table(const Table& other) :
 {
 	if (size == 0)
 	{
-		array = NULL;
+		array = nullptr;
 	}
 	else
 	{
@@ -49,7 +62,7 @@ Table::Table(const Table& other) :
 			array[i] = other.array[i];
 		}
 	}
-	std::cout << "Created copy: " << name << std::endl;
+	std::cout << "Created copy: " << array << std::endl;
 }
 
 Table::Table(std::string& name, int array_size, int* array) :
@@ -57,16 +70,13 @@ Table::Table(std::string& name, int array_size, int* array) :
 	size(array_size),
 	array(array)
 {
-	std::cout << "Created using concatenation" << std::endl;
+	std::cout << "Created using concatenation: " << array << std::endl;
 }
 
 Table::~Table()
 {
-	if (array != NULL)
-	{
-		delete[] array;
-	}
-	std::cout << "Deleted object with name: " << name << std::endl;
+	delete[] array;
+	std::cout << "Deleted object: " << array << std::endl;
 }
 
 void Table::print_info()
@@ -87,8 +97,8 @@ bool Table::set_size(int new_size)
 		return false;
 	}
 	int* new_array = new int[new_size];
-	if (array != NULL)
-	{	
+	if (array != nullptr)
+	{
 		for (int i = 0; i < std::min(size, new_size); i++)
 		{
 			new_array[i] = array[i];
@@ -114,7 +124,7 @@ void Table::print()
 {
 	std::cout << "Array with pointer: " << array << " and size: " << size << std::endl;
 	std::cout << '[';
-	if (array == NULL)
+	if (array == nullptr)
 	{
 		std::cout << "NULL";
 	}
@@ -135,14 +145,13 @@ Table* Table::clone()
 }
 
 
-
 Table Table::operator+(const Table& other)
 {
 	int new_size = size + other.size;
 	int* new_array;
 	if (new_size == 0)
 	{
-		new_array = NULL;
+		new_array = nullptr;
 	}
 	else
 	{
@@ -159,27 +168,45 @@ Table Table::operator+(const Table& other)
 	return Table(name, new_size, new_array);
 }
 
-
-Table operator+(int element, const Table& table)
+Table& Table::operator=(const Table& other)
 {
-	int new_size = table.size + 1;
-	int* new_array = new int[new_size];
-	new_array[0] = element;
-	for (int i = 0; i < table.size; i++)
+	std::cout << "op=" << std::endl;
+	if (&other != this)
 	{
-		new_array[i + 1] = table.array[i];
+		delete[] array;
+		std::cout << "Deleted array: " << array << std::endl;
+		int* new_array;
+		if (other.size == 0)
+		{
+			new_array = nullptr;
+		}
+		else
+		{
+			new_array = new int[other.size];
+			for (int i = 0; i < other.size; i++)
+			{
+				new_array[i] = other.array[i];
+			}
+		}
+		std::cout << "New array: " << new_array << std::endl;
+		array = new_array;
+		name = other.name + "_=";
+		size = other.size;
 	}
-	std::string new_name = "Created with friend";
-	return Table(new_name, new_size, new_array);
+	return *this;
 }
 
-std::ostream& operator<<(std::ostream& os, const Table& table)
+Table& Table::operator=(Table&& other)
 {
-	os << '[';
-	for (int i = 0; i < table.size; i++)
+	if (&other != this)
 	{
-		 os << table.array[i] << " ";
+		delete[] array;
+		std::cout << "Deleted array: " << array << std::endl;
+		array = other.array;
+		size = other.size;
+		other.array = nullptr;
+		other.size = 0;
 	}
-	os << ']';
-	return os;
+	std::cout << "move op=" << std::endl;
+	return *this;
 }

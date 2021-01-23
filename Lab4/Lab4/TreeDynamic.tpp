@@ -46,3 +46,10 @@ bool TreeDynamic<T>::is_consistent()
 {
 	return root->all_consistent();
 }
+
+
+template <typename T>
+void TreeDynamic<T>::set_root(NodeDynamic<T>* new_root)
+{
+	root = new_root;
+}

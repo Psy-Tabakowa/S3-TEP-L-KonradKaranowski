@@ -51,7 +51,7 @@ void test_concatenation()
 void test_concatenation_with_zeros()
 {
 	std::string str = "Name1";;
-	Table tab1 = Table(str, 2);;
+	Table tab1 = Table(str, -2);;
 	Table tab2 = Table();;
 	for (int i = 0; i < 8; i++)
 	{
@@ -62,4 +62,17 @@ void test_concatenation_with_zeros()
 	Table tab3 = tab1 + tab2;;
 	std::cout << "Array after concatenation: " << std::endl;
 	tab3.print();
+}
+
+
+void test_operator_plus()
+{
+	Table tab_0 = Table();
+	std::cout << (1 + tab_0) << "***** ***" << std::endl;
+}
+
+void test_stream()
+{
+	Table tab = Table();
+	std::cout << tab << std::endl;
 }

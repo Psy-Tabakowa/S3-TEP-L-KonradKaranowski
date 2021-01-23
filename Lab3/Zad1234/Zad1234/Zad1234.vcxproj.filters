@@ -27,11 +27,11 @@
     <ClCompile Include="TreeStatic.cpp">
       <Filter>Pliki zasobów</Filter>
     </ClCompile>
-    <ClCompile Include="NodeDynamic.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="TreeDynamic.cpp">
-      <Filter>Pliki źródłowe</Filter>
+      <Filter>Pliki zasobów</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeDynamic.cpp">
+      <Filter>Pliki zasobów</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

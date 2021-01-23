@@ -1,6 +1,6 @@
 template <typename T>
 NodeDynamic<T>::NodeDynamic() :
-	//val(NULL),
+	val(),
 	parent(NULL)
 {}
 
@@ -120,6 +120,35 @@ bool NodeDynamic<T>::remove_child(NodeDynamic<T>* child)
 	return false;
 }
 
+template <typename T>
+std::vector<NodeDynamic<T>*>& NodeDynamic<T>::get_children()
+{
+	return children;
+}
+
+
+template <typename T>
+void NodeDynamic<T>::set_parent(NodeDynamic<T>* new_parent)
+{
+	parent = new_parent;
+}
+
+template <typename T>
+T NodeDynamic<T>::get_value()
+{
+	return val;
+}
+
+template <typename T>
+void NodeDynamic<T>::change_parent_for_children(NodeDynamic* new_parent)
+{
+	for (int i = 0; i < get_children_number(); i++)
+	{
+		children[i]->set_parent(new_parent);
+	}
+}
+
+
 
 // boolean specialisation
 template <>
@@ -127,3 +156,4 @@ void NodeDynamic<bool>::print()
 {
 	std::cout << std::boolalpha << " " << val;
 }
+

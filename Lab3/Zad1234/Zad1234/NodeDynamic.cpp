@@ -34,8 +34,8 @@ void NodeDynamic::add_new_child()
 
 void NodeDynamic::add_new_child(NodeDynamic* new_child)
 {
-	children.push_back(new_child);
 	new_child->parent = this;
+	children.push_back(new_child);
 }
 
 NodeDynamic* NodeDynamic::get_child(int child_offset)
@@ -51,6 +51,7 @@ NodeDynamic* NodeDynamic::get_parent()
 {
 	return parent;
 }
+
 
 
 void NodeDynamic::print()
@@ -79,6 +80,7 @@ bool NodeDynamic::remove_child(NodeDynamic* child)
 	{
 		if (children[i] == child)
 		{
+			children.erase(children.begin() + i);
 			return true;
 		}
 	}

@@ -70,7 +70,31 @@ void dynamic_nodes_test()
 
 void dynamic_tree_test()
 {
-	//TreeDynamic tree;
-	//std::cout << "Print Tree: ";
-	//tree.print_tree();
+	TreeDynamic tree;
+	std::cout << "Print Tree: ";
+	tree.print_tree();
+}
+
+
+void move_subtree_test()
+{
+	TreeDynamic tree1;
+	TreeDynamic tree2;
+	tree1.get_root()->add_new_child();
+	tree1.get_root()->add_new_child();
+	tree1.get_root()->get_child(0)->set_value(3);
+	tree1.get_root()->get_child(1)->set_value(5);
+	tree1.get_root()->print_all_below();
+
+	NodeDynamic* root2 = new NodeDynamic();
+	tree2.get_root()->add_new_child();
+	tree2.get_root()->add_new_child();
+	tree2.get_root()->get_child(0)->set_value(-5);
+	tree2.get_root()->get_child(1)->set_value(-3);
+	tree2.get_root()->print_all_below();
+
+	bool result = tree1.move_subtree(tree1.get_root(), tree2.get_root()->get_child(0));
+	std::cout << std::boolalpha << result << std::endl;
+	tree1.get_root()->print_all_below();
+	tree2.get_root()->print_all_below();
 }

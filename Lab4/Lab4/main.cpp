@@ -8,5 +8,8 @@ int main()
 	test_int_pointer();
 	test_bool();
 	test_is_consistent();
+	test_custom_class();
+	test_swap_tree();
+	test_swap_node();
 	return 0;
 }
