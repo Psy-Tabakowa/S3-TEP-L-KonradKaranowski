@@ -8,3 +8,6 @@ void test_matmul();
 void test_addiction();
 void test_subtraction();
 void test_getvectors();
+void test_scalar();
+void test_dotproduct();
+void test_transpose();

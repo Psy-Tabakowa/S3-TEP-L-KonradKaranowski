@@ -6,13 +6,16 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <iomanip>
 
 
 
 namespace MyAlgebra
 {
-	const char SEP = ' ';
+	// kolorki
+	const std::string COLORS[] = { "\033[37m", "\033[31m", "\033[32m", "\033[34m", "\033[35m",  "\033[36m" };
+	const int NUM_COLORS = 6;
+	const std::string RESET = "\033[0m";
+
 	template <typename T>
 	class Matrix
 	{
@@ -21,9 +24,13 @@ namespace MyAlgebra
 		int rows;
 		int cols;
 		int elements;
-	public:
+
+		// auxiliary
 		Matrix(uint16_t rows, uint16_t cols, T* matrix);
-		// some dumb matrix
+		// conversions
+		static T convert(const std::string& string);
+	public:
+		// mamciem
 		Matrix(uint16_t rows, uint16_t cols);
 		// copy constructor
 		Matrix(const Matrix& other);
@@ -37,8 +44,7 @@ namespace MyAlgebra
 		// move assignment
 		Matrix& operator=(Matrix&& other);
 		// diagonal matrix
-		// diagonal matrix
-		Matrix& operator=(T* diagonal);
+		Matrix& operator=(T diagonal);
 
 		// coœ tam coœ tam
 		T* operator[](int idx);
@@ -51,31 +57,31 @@ namespace MyAlgebra
 		// matmul
 		Matrix operator*(const Matrix& other);
 		// mul by scalar
-		Matrix operator*(T scalar);
+		Matrix operator*(T scalar) const;
 		// vector dot product
 		T operator|(const Matrix& other);
 
 		// some random vectors
-		Matrix rowVector(int idx);
-		Matrix colVector(int idx);
+		Matrix row_vector(int idx);
+		Matrix col_vector(int idx);
 
 		// print matrix
 		void display();
 
 		// read from file
-		static Matrix<T> read_txt(const std::string& path);
-
-		// conversions
-		static T convert(const std::string& string);
+		static Matrix<T> read_txt(const std::string& path, char separator = ' ');
 	};
+
+	template<typename T>
+	Matrix<T> operator*(T scalar, const Matrix<T>& other);
 }
 
 template<typename T>
-MyAlgebra::Matrix<T>::Matrix(uint16_t rows, uint16_t cols, T* matrix) :
+MyAlgebra::Matrix<T>::Matrix(uint16_t rows, uint16_t cols, T* new_matrix) :
 	rows(rows),
 	cols(cols),
 	elements(rows * cols),
-	matrix(matrix)
+	matrix(new_matrix)
 {
 }
 
@@ -117,7 +123,6 @@ MyAlgebra::Matrix<T>::Matrix(Matrix&& other) :
 template<typename T>
 MyAlgebra::Matrix<T>::~Matrix()
 {
-	std::cout << "delete this" << std::endl;
 	delete[] matrix;
 }
 
@@ -158,7 +163,7 @@ MyAlgebra::Matrix<T>& MyAlgebra::Matrix<T>::operator=(Matrix&& other)
 }
 
 template<typename T>
-MyAlgebra::Matrix<T>& MyAlgebra::Matrix<T>::operator=(T* diagonal)
+MyAlgebra::Matrix<T>& MyAlgebra::Matrix<T>::operator=(T diagonal)
 {
 	if (rows != cols)
 	{
@@ -174,7 +179,7 @@ MyAlgebra::Matrix<T>& MyAlgebra::Matrix<T>::operator=(T* diagonal)
 		}
 		else
 		{
-			matrix[i] = T();
+			matrix[i] = T{};
 		}
 	}
 	return *this;
@@ -185,7 +190,7 @@ T* MyAlgebra::Matrix<T>::operator[](int idx)
 {
 	if (idx < 0 || idx > rows)
 	{
-		throw std::exception("Invalid index");
+		throw std::exception("Invalid index.");
 	}
 	return &matrix[idx * cols];
 }
@@ -201,7 +206,7 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator~()
 			new_matrix[j * rows + i] = matrix[i * cols + j];
 		}
 	}
-	return Matrix(rows, cols, new_matrix);
+	return Matrix(cols, rows, new_matrix);
 }
 
 template<typename T>
@@ -261,9 +266,9 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator*(const Matrix& other)
 }
 
 template<typename T>
-MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator*(T scalar)
+MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator*(T scalar) const
 {
-	T new_matrix = new T[elements];
+	T* new_matrix = new T[elements];
 	for (int i = 0; i < elements; i++)
 	{
 		new_matrix[i] = matrix[i] * scalar;
@@ -271,18 +276,20 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::operator*(T scalar)
 	return Matrix(rows, cols, new_matrix);
 }
 
+
 template<typename T>
 T MyAlgebra::Matrix<T>::operator|(const Matrix& other)
 {
-	if ((cols > 1 && rows > 1) || (other.rows > 1 || other.cols > 1))
+	if ((cols > 1 && rows > 1) || (other.rows > 1 && other.cols > 1))
 	{
 		throw std::exception("This vectors are not vectors.");
 	}
 	if (elements != other.elements)
 	{
+		std::cout << elements << " " << other.elements << std::endl;
 		throw std::exception("Cannot multiply two vectors of not equal lenghts.");
 	}
-	T product = T();
+	T product{};
 	for (int i = 0; i < elements; i++)
 	{
 		product += matrix[i] * other.matrix[i];
@@ -291,7 +298,7 @@ T MyAlgebra::Matrix<T>::operator|(const Matrix& other)
 }
 
 template<typename T>
-MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::rowVector(int idx)
+MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::row_vector(int idx)
 {
 	if (idx < 0 || idx > rows)
 	{
@@ -300,14 +307,14 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::rowVector(int idx)
 	T* new_matrix = new T[cols];
 	for (int i = 0; i < cols; i++)
 	{
-		new_matrix[i] = matrix[i * cols + cols];
+		new_matrix[i] = matrix[idx * cols + i];
 	}
 	return Matrix(1, cols, new_matrix);
 }
 
 
 template<typename T>
-MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::colVector(int idx)
+MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::col_vector(int idx)
 {
 	if (idx < 0 || idx > cols)
 	{
@@ -316,13 +323,13 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::colVector(int idx)
 	T* new_matrix = new T[cols];
 	for (int i = 0; i < rows; i++)
 	{
-		new_matrix[i] = matrix[i * rows + rows];
+		new_matrix[i] = matrix[idx * rows + i];
 	}
 	return Matrix(rows, 1, new_matrix);
 }
 
 template<typename T>
-MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path)
+MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path, char separator)
 {	
 	std::ifstream file;
 	file.open(path);
@@ -339,10 +346,9 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path)
 	file.close();
 	int rows = matrix.size();
 	int cols = 0;
-	// ale mi siê nie chce jezus maria
-	std::string temp;
+	std::string curr;
 	std::stringstream stream = std::stringstream(matrix[0]);
-	while (getline(stream, temp, SEP))
+	while (getline(stream, curr, separator))
 	{
 		cols++;
 	}
@@ -350,11 +356,11 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path)
 	for (int i = 0; i < rows; i++)
 	{
 		std::vector<T> vector;
-		std::string temp;
+		std::string curr;
 		std::stringstream stream = std::stringstream(matrix[i]);
-		while (getline(stream, temp, SEP))
+		while (getline(stream, curr, separator))
 		{
-			vector.push_back(convert(temp));
+			vector.push_back(convert(curr));
 		}
 		if (vector.size() != cols)
 		{
@@ -402,9 +408,14 @@ void MyAlgebra::Matrix<T>::display()
 		std::cout << "| ";
 		for (int j = 0; j < cols; j++)
 		{
-			std::cout << matrix[i * cols + j] << ", ";
+			std::cout << COLORS[(i + j) % NUM_COLORS] <<matrix[i * cols + j] << ", ";
 		}
-		std::cout << '|' << std::endl;
+		std::cout << '|' << RESET << std::endl;
 	}
 }
 
+template<typename T>
+MyAlgebra::Matrix<T> MyAlgebra::operator*(T scalar, const Matrix<T>& other)
+{
+	return other * scalar;
+}
