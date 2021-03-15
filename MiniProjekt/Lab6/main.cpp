@@ -12,5 +12,6 @@ int main()
 	test_dotproduct();
 	test_getvectors();
 	test_transpose();
+	test_save();
 	return 0;
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <fstream>
 
 
 
@@ -70,6 +71,7 @@ namespace MyAlgebra
 
 		// read from file
 		static Matrix<T> read_txt(const std::string& path, char separator = ' ');
+		bool save_txt(const std::string& path, const std::string& separator = " ");
 	};
 
 	template<typename T>
@@ -374,6 +376,27 @@ MyAlgebra::Matrix<T> MyAlgebra::Matrix<T>::read_txt(const std::string& path, cha
 	return Matrix<T>(rows, cols, new_matrix);
 }
 
+template<typename T>
+bool MyAlgebra::Matrix<T>::save_txt(const std::string& path, const std::string& separator)
+{
+	std::ofstream file;
+	file.open(path);
+	if (!file.good())
+	{
+		return false;
+	}
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			file << matrix[i * cols + j] << separator;
+		}
+		file << '\n';
+	}
+	file.close();
+	return true;
+}
+
 // conversions
 template <typename T>
 T MyAlgebra::Matrix<T>::convert(const std::string& string)
@@ -410,7 +433,7 @@ void MyAlgebra::Matrix<T>::display()
 		{
 			std::cout << COLORS[(i + j) % NUM_COLORS] <<matrix[i * cols + j] << ", ";
 		}
-		std::cout << '|' << RESET << std::endl;
+		std::cout << RESET << '|' <<  std::endl;
 	}
 }
 

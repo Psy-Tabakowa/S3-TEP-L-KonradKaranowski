@@ -11,3 +11,4 @@ void test_getvectors();
 void test_scalar();
 void test_dotproduct();
 void test_transpose();
+void test_save();

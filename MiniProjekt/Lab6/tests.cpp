@@ -545,3 +545,31 @@ void test_transpose()
 	std::cout << "Matrix transposed: " << std::endl;
 	mattrans.display();
 }
+
+void test_save()
+{
+	Matrix<int> mt1 = Matrix<int>(2, 3);
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j=0; j<3; j++)
+		{
+			mt1[i][j] = i + j;
+		}
+	}
+	mt1.display();
+	bool r1 = mt1.save_txt("supermacierz.txt");
+	bool r2 = mt1.save_txt("POTEMNSZNA MAMCIEMSZ.txt", "===");
+	std::cout << r1 << " " << r2 << std::endl;
+	Matrix<float> mt2 = Matrix<float>(2, 3);
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			mt2[i][j] = i + j + 0.5f;
+		}
+	}
+	mt2.display();
+	bool rt1 = mt2.save_txt("supermacierz2.txt");
+	bool rt2 = mt2.save_txt("POTEMNSZNA MAMCIEMSZ2.txt", "^^^");
+	std::cout << rt1 << " " << rt2 << std::endl;
+}
